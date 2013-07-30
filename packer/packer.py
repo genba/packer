@@ -8,6 +8,12 @@ import helpers
 
 
 class Packer(object):
+    """Packer
+    
+    Application instance that manages packages on your system.
+
+    """
+
     name = 'packer'
     version = '0.1.1'
     database_name = 'database.db'
@@ -46,10 +52,12 @@ class Packer(object):
 
     @classmethod
     def install(cls):
+        """Create the required directories in the home directory"""
         [os.makedirs('{}/{}'.format(cls.home, cls.dirs[d])) for d in cls.dirs]
 
     @classmethod
     def uninstall(cls):
+        """Remove the package manager from the system."""
         if os.path.exists(cls.home):
             shutil.rmtree(cls.home)
 
