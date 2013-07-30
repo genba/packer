@@ -21,6 +21,7 @@ setup(
 	],
 	install_requires=[
 		'requests',
+		'docopt',
 	],
 	entry_points = {
         'console_scripts': ['packer=packer.command_line:main'],
