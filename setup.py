@@ -1,31 +1,25 @@
-
-import packer
-Packer = packer.Packer
-
-
 try:
     from setuptools import setup
 except ImportError:
     from distutils.core import setup
 
+import packer
+Packer = packer.Packer
 
-def readme():
-    with open('README.rst') as f:
-        return f.read()
 
 setup(
 	name = Packer.name,
     version = Packer.version,
 	description = 'A new type of package manager',
-	long_description = readme(),
+	long_description = open('README.rst').read(),
 	url = 'http://github.com/kalail/packer',
 	author = 'Kashif Malik',
 	author_email = 'kashif@kalail.com',
-	license = 'MIT',
+	license=open('LICENSE').read(),
 	packages = [
 		'packer'
 	],
-	install_requires = [
+	install_requires=[
 		'requests',
 	],
 	zip_safe = False
