@@ -1,4 +1,11 @@
-from setuptools import setup
+
+import packer.Packer as Packer
+
+
+try:
+    from setuptools import setup
+except ImportError:
+    from distutils.core import setup
 
 
 def readme():
@@ -6,12 +13,12 @@ def readme():
         return f.read()
 
 setup(
-	name = 'packer',
-    version = '0.1.0',
+	name = Packer.name,
+    version = Packer.version,
 	description = 'A new type of package manager',
-	long_description=readme(),
+	long_description = readme(),
 	url = 'http://github.com/kalail/packer',
-	author = 'kalail',
+	author = 'Kashif Malik',
 	author_email = 'kashif@kalail.com',
 	license = 'MIT',
 	packages = [
