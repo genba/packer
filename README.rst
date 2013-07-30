@@ -28,16 +28,16 @@ It should be:
 * Multiplatform (Starting with Windows, OSX, Ubuntu)
 
 
-Installaion
------------
+Installation
+------------
 
-Install using the following command::
+Install using the following command .. code-block:: bash
 
     pip install packer
 
 
 Dependencies:
 
-* Python (must be on PATH)
+* Python 2.7 (must be on PATH)
 * pip
 * pywin32 (Windows)
