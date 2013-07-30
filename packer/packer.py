@@ -29,8 +29,12 @@ class Packer(object):
         return '{} ({})'.format(self.name, self.version)
 
     @classmethod
+    def get_path(cls, path):
+        return '{}/{}'.format(cls.home, path)
+
+    @classmethod
     def create_db(cls):
-        db = sqlite3.connect(cls.database_name)
+        db = sqlite3.connect(cls.get_path(cls.database_name))
         with db:
             db.execute('''CREATE TABLE IF NOT EXISTS packages (name text)''')
             db.execute('''INSERT OR ROLLBACK INTO packages VALUES (?)''', (cls.name,))
@@ -38,22 +42,32 @@ class Packer(object):
 
     @classmethod
     def remove_db(cls):
-        os.remove(cls.database_name)
+        os.remove(cls.get_path(cls.database_name))
 
     @classmethod
     def get_or_create_db(cls):
-        if not os.path.exists(cls.database_name):
+        if not os.path.exists(cls.get_path(cls.database_name)):
             return cls.create_db()
-        return sqlite3.connect(cls.database_name)
+        return sqlite3.connect(cls.get_path(cls.database_name))
 
     @classmethod
-    def find_prev_install(cls):
+    def find_install(cls):
         return os.path.exists(cls.home)
+
+    @classmethod
+    def validate_install(cls):
+        if not cls.find_install():
+            raise RuntimeError('Packer has not been installed')
+        validators = cls.dirs.values() + [cls.database_name]
+        for d in validators:
+            if not os.path.exists(cls.get_path(d)):
+                raise RuntimeError('Installation looks corrupt')
 
     @classmethod
     def install(cls):
         """Create the required directories in the home directory"""
-        [os.makedirs('{}/{}'.format(cls.home, cls.dirs[d])) for d in cls.dirs]
+        [os.makedirs(cls.get_path(cls.dirs[d])) for d in cls.dirs]
+        cls.create_db()
 
     @classmethod
     def uninstall(cls):
@@ -61,11 +75,15 @@ class Packer(object):
         if os.path.exists(cls.home):
             shutil.rmtree(cls.home)
 
+    @classmethod
+    def reinstall(cls):
+        """Remove the package manager from the system."""
+        cls.uninstall()
+        cls.install()
+
 
     def __init__(self):
-        if not self.find_prev_install():
-            self.install()
-        os.chdir(self.home)
+        self.validate_install()
         self.database = self.get_or_create_db()
 
     def list(self):
@@ -86,7 +104,6 @@ class Packer(object):
     def close(self):
         self.database.commit()
         self.database.close()
-        os.chdir('..')
 
     def __delete__(self):
         self.close()

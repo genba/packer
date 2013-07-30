@@ -29,7 +29,17 @@ class TerminalPacker(Packer):
         # Parse options
         self.options = {}
         self.options['name'] = args.get('<name>')
-        super(TerminalPacker, self).__init__()
+        # Catch installation validation errors
+        try:
+            super(TerminalPacker, self).__init__()
+        except RuntimeError as e:
+            if args['rebuild']:
+                return
+            print 'Note: {}'.format(e.message)
+            print 'Rebuilding...\n'
+            self.reinstall()
+            super(TerminalPacker, self).__init__()
+
 
     def run(self):
         args = self.args
@@ -37,8 +47,8 @@ class TerminalPacker(Packer):
             self.list()
         elif args['search']:
             self.search()
-        # elif args['install']:
-            # pack.install()
+        if args['rebuild']:
+            self.reinstall()
         # elif args['uninstall']:
             # pack.uninstall()
         else:
@@ -60,5 +70,8 @@ class TerminalPacker(Packer):
 
 def main():
     app = TerminalPacker()
-    app.run()
+    try:
+        app.run()
+    except NotImplementedError:
+        pass
     app.close()
