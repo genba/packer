@@ -1,5 +1,6 @@
 
-import packer.Packer as Packer
+import packer
+Packer = packer.Packer
 
 
 try:
