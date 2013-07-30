@@ -1,0 +1,16 @@
+# Python bytecode files
+*.py[co]
+
+# Database files
+*.db
+
+# Setuptools distribution folder.
+dist
+build
+
+# Python egg metadata, regenerated from source files by setuptools.
+*.egg-info
+*.egg
+
+# Vagrant files
+.vagrant
