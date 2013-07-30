@@ -1,20 +1,19 @@
-
-******
 Packer
-******
+======
+
+.. image:: https://badge.fury.io/py/packer.png
+    :target: http://badge.fury.io/py/packer
 
 .. image:: https://travis-ci.org/kalail/packer.png
+	:target: https://travis-ci.org/kalail/packer
 
 A new type of package manager
 
 *Still under development*
 
-.. note:: This is only the library package.
 
-
-=====
 Goals
-=====
+-----
 
 Package management works but it is far from ideal. There is no simple,
 free, platform agnostic way to distribute software. I want to fix this.
@@ -29,9 +28,8 @@ It should be:
 * Multiplatform (Starting with Windows, OSX, Ubuntu)
 
 
-===========
 Installaion
-===========
+-----------
 
 Install using the following command::
 
