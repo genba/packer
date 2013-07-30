@@ -8,7 +8,7 @@ import helpers
 
 class Packer(object):
     name = 'packer'
-    version = '0.1.0'
+    version = '0.1.1'
     database_name = 'database.db'
     package_index_url = 'http://www.google.com/search'
     home = '{}/.packer'.format(os.path.expanduser('~'))
