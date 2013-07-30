@@ -6,6 +6,9 @@ A new type of package manager
 
 *Still under development*
 
+.. note:: This is only the library package.
+
+
 =====
 Goals
 =====
@@ -22,19 +25,18 @@ It should be:
 * Extendable
 * Multiplatform (Starting with Windows, OSX, Ubuntu)
 
-====
-Help
-====
+
+===========
+Installaion
+===========
+
+Install using the following command::
+
+    pip install packer
+
 
 Dependencies:
 
-* Python on PATH
+* Python (must be on PATH)
 * pip
 * pywin32 (Windows)
-
-Install:
-
-* `pip install packer`
-
-.. note:: This is only the library inteface.
-
