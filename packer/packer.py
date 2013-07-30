@@ -1,6 +1,7 @@
 #!/usr/bin/python
 import os
 import sys
+import shutil
 import sqlite3
 import requests
 import helpers
@@ -47,6 +48,11 @@ class Packer(object):
     def install(cls):
         [os.makedirs('{}/{}'.format(cls.home, cls.dirs[d])) for d in cls.dirs]
 
+    @classmethod
+    def uninstall(cls):
+        if os.path.exists(cls.home):
+            shutil.rmtree(cls.home)
+
 
     def __init__(self):
         if not self.find_prev_install():
@@ -72,6 +78,7 @@ class Packer(object):
     def close(self):
         self.database.commit()
         self.database.close()
+        os.chdir('..')
 
     def __delete__(self):
         self.close()
