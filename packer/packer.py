@@ -25,30 +25,13 @@ class Packer(object):
         'PACKAGES': 'packages',
     }
 
-    def __str__(self):
-        return '{} ({})'.format(self.name, self.version)
+    @classmethod
+    def __str__(cls):
+        return '{} ({})'.format(cls.name, cls.version)
 
     @classmethod
     def get_path(cls, path):
         return '{}/{}'.format(cls.home, path)
-
-    @classmethod
-    def create_db(cls):
-        db = sqlite3.connect(cls.get_path(cls.database_name))
-        with db:
-            db.execute('''CREATE TABLE IF NOT EXISTS packages (name text)''')
-            db.execute('''INSERT OR ROLLBACK INTO packages VALUES (?)''', (cls.name,))
-        return db
-
-    @classmethod
-    def remove_db(cls):
-        os.remove(cls.get_path(cls.database_name))
-
-    @classmethod
-    def get_or_create_db(cls):
-        if not os.path.exists(cls.get_path(cls.database_name)):
-            return cls.create_db()
-        return sqlite3.connect(cls.get_path(cls.database_name))
 
     @classmethod
     def find_install(cls):
@@ -57,34 +40,58 @@ class Packer(object):
     @classmethod
     def validate_install(cls):
         if not cls.find_install():
-            raise RuntimeError('Packer has not been installed')
+            raise RuntimeError('Packer is not installed. Run "Packer.install()".')
         validators = cls.dirs.values() + [cls.database_name]
         for d in validators:
             if not os.path.exists(cls.get_path(d)):
-                raise RuntimeError('Installation looks corrupt')
+                raise RuntimeError('Packer installation looks corrupt. Run "Packer.reinstall()".')
+
+    @classmethod
+    def create_db(cls):
+        if os.path.exists(cls.get_path(cls.database_name)):
+            raise RuntimeError('Database already exist.')
+        db = sqlite3.connect(cls.get_path(cls.database_name))
+        with db:
+            db.execute('''CREATE TABLE IF NOT EXISTS packages (name text)''')
+            db.execute('''INSERT OR ROLLBACK INTO packages VALUES (?)''', (cls.name,))
+
+    @classmethod
+    def remove_db(cls):
+        if not os.path.exists(cls.get_path(cls.database_name)):
+            raise RuntimeError('Database does not exist.')
+        os.remove(cls.get_path(cls.database_name))
+
+    @classmethod
+    def connect_db(cls):
+        if not os.path.exists(cls.get_path(cls.database_name)):
+            raise RuntimeError('Database does not exist.')
+        return sqlite3.connect(cls.get_path(cls.database_name))
 
     @classmethod
     def install(cls):
         """Create the required directories in the home directory"""
+        if cls.find_install():
+            raise RuntimeError('Packer installation already exists. Run "Packer.reinstall()".')
         [os.makedirs(cls.get_path(cls.dirs[d])) for d in cls.dirs]
         cls.create_db()
 
     @classmethod
     def uninstall(cls):
         """Remove the package manager from the system."""
-        if os.path.exists(cls.home):
-            shutil.rmtree(cls.home)
+        if not cls.find_install():
+            raise RuntimeError('Packer installation not found.')
+        shutil.rmtree(cls.home)
 
     @classmethod
     def reinstall(cls):
-        """Remove the package manager from the system."""
+        """Reinstall the package manager onto the system."""
         cls.uninstall()
         cls.install()
 
 
     def __init__(self):
         self.validate_install()
-        self.database = self.get_or_create_db()
+        self.database = self.connect_db()
 
     def list(self):
         packages = []
