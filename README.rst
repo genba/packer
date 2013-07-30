@@ -3,6 +3,8 @@
 Packer
 ******
 
+.. image:: https://travis-ci.org/kalail/packer.png
+
 A new type of package manager
 
 *Still under development*
