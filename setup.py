@@ -22,5 +22,8 @@ setup(
 	install_requires=[
 		'requests',
 	],
+	entry_points = {
+        'console_scripts': ['packer=packer.command_line:main'],
+    },
 	zip_safe = False
 )
