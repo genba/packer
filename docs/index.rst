@@ -22,10 +22,10 @@ Goals
 -----
 
 Package management works but it is far from ideal. There is no simple,
-free, platform agnostic way to distribute software. I want to fix this.
+free, platform agnostic way to distribute software. Let's fix this.
 
 Enter **Packer**, a package manager built from scratch to support simple
-multiplatform software installation.
+multiplatform software installation
 
 It should be:
 
@@ -37,7 +37,7 @@ It should be:
 Installation
 ------------
 
-Install using the following command .. code-block:: bash
+Install using the following command::
 
     pip install packer
 
